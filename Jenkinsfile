@@ -34,7 +34,7 @@ pipeline {
           openshift.withCluster() {
             bc = openshift.selector( "bc/${APP_NAME}" ).object()
             image = bc.spec.output.to.name
-            image = image.replaceAll("-*$","-$BUILD_NUMBER")
+            image = image.replaceAll("-*\$","-${BUILD_NUMBER}")
             System.out.println(image)
             bc.spec.output.to.name=image
             openshift.apply(bc)
