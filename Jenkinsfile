@@ -171,7 +171,7 @@ pipeline {
     }
 
     stage('Tag Image') {
-     */ steps {
+     /*  steps {
         script {
           openshift.withCluster() {
             openshift.tag("${APP_NAME}@${SIGNED_IMAGE}", "${APP_NAME}:${DEPLOY_APP_TAG}")
