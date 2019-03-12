@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Code Checkout') {
       steps {
-        git url: "${SOURCE_CODE_URL}", branch: "${SOURCE_CODE_REF}"
+         checkout scm
       }
     }
 
