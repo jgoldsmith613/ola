@@ -124,7 +124,7 @@ pipeline {
     }
 
     stage('Sign Image') {
-     /* steps {
+      steps { /*
         script {
         def obj = "${APP_NAME}-${env.BUILD_NUMBER}"
 
@@ -166,19 +166,20 @@ pipeline {
             }
           }
         }
-      }
 */
+      }
     }
 
     stage('Tag Image') {
-     /*  steps {
+      steps {/*
         script {
           openshift.withCluster() {
             openshift.tag("${APP_NAME}@${SIGNED_IMAGE}", "${APP_NAME}:${DEPLOY_APP_TAG}")
           }
         }
-      }
 */
+      }
+
     }
 
     stage('Rollout Application') {
