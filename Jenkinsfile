@@ -72,7 +72,7 @@ pipeline {
       steps{
          script {
              tag = image.replaceAll("^.+?:","")
-             tagInfo = httpRequest "https://quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/api/v1/repository/admin/security-demo/tag/${tag}/images"
+             tagInfo = httpRequest ignoreSslErrors:true, url:"http://quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/api/v1/repository/admin/security-demo/tag/${tag}/images"
              echo tagInfo
          }
       }
