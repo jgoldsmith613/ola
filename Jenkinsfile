@@ -73,7 +73,7 @@ pipeline {
          script {
              tag = image.replaceAll("^.+?:","")
              tagInfo = httpRequest ignoreSslErrors:true, url:"http://quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/api/v1/repository/admin/security-demo/tag/${tag}/images"
-             echo tagInfo
+             echo tagInfo.content
          }
       }
    }
