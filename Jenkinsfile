@@ -131,10 +131,10 @@ pipeline {
 
              }
              
-             echo low
-             echo medium
-             echo high
-             echo critical
+             echo low.toString()
+             echo medium.toString()
+             echo high.toString()
+             echo critical.toString()    
          }
       }
    }
