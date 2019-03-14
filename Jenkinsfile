@@ -80,8 +80,14 @@ pipeline {
                      imageId = imageRef.id
                  }
              }
+             echo imageId
              vulns = httpRequest ignoreSslErrors:true, url:"https://quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/api/v1/repository/admin/security-demo/image/${imageId}/security?vulnerabilities=true"
-             echo vulns.content
+             vulns = vulns.content
+             low=[]
+             medium=[]
+             high=[]
+             
+             
          }
       }
    }
