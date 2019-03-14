@@ -80,14 +80,61 @@ pipeline {
                      imageId = imageRef.id
                  }
              }
-             echo imageId
-             vulns = httpRequest ignoreSslErrors:true, url:"https://quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/api/v1/repository/admin/security-demo/image/${imageId}/security?vulnerabilities=true"
-             vulns = vulns.content
-             low=[]
-             medium=[]
-             high=[]
+
+             timeout(time: 5, unit: 'MINUTES') {
+
+                 waitUntil() {
+
+                     vulns = httpRequest ignoreSslErrors:true, url:"https://quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/api/v1/repository/admin/security-demo/image/${imageId}/security?vulnerabilities=true"
+                     vulns = vulns.content  
+                     if(vulns.status != "scanned"){
+                         return false
+                     }
+
+                     low=[]
+                     medium=[]
+                     high=[]
+                     critical=[]
+                     
+                     for ( rpm in vulns.data.Layer.Features ){
+                         vulnList = rpm.Vulnerabilities
+                         if(vulnList != null || vulnList.size() != 0){
+                             for(vuln in vulnList){
+                                 switch(vuln.Severity){
+                                     case "Low":
+                                         low.add(vuln)
+                                         break
+                                     case "Medium":
+                                         medium.add(vuln)
+                                         break
+                                     case "High":
+                                         high.add(vuln)
+                                         break
+                                     case "Critical":
+                                         critical.add(vuln)
+                                         break
+                                     default:
+                                         echo "Should never be here"
+                                         currentBuild.result = "FAILURE"
+                                         break
+                                   }
+                              
+                                 }
+                             }
+                         }
+                         
+                     
+
+
+                     return true
+                 }
+
+             }
              
-             
+             echo low
+             echo medium
+             echo high
+             echo critical
          }
       }
    }
