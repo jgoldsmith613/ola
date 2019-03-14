@@ -98,7 +98,7 @@ pipeline {
                      
                      for ( rpm in vulns.data.Layer.Features ){
                          vulnList = rpm.Vulnerabilities
-                         if(vulnList != null || vulnList.size() != 0){
+                         if(vulnList != null && vulnList.size() != 0){
                              for(vuln in vulnList){
                                  switch(vuln.Severity){
                                      case "Low":
