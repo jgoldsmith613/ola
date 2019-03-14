@@ -73,7 +73,15 @@ pipeline {
          script {
              tag = image.replaceAll("^.+?:","")
              tagInfo = httpRequest ignoreSslErrors:true, url:"http://quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/api/v1/repository/admin/security-demo/tag/${tag}/images"
-             echo tagInfo.content
+             tagInfo = readJSON text: taginfo.content
+             index_max = -1
+             for( imageRef in tagInfo.images ) {
+                 if( imageRef.sort_index > index_max ) {
+                     imageId = imageRef.id
+                 }
+             }
+             vulns = httpRequest ignoreSslErrors:true, url:"https://quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/api/v1/repository/admin/security-demo/image/${imageId}/security?vulnerabilities=true"
+             echo vulns.content
          }
       }
    }
