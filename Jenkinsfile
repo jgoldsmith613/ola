@@ -99,7 +99,9 @@ pipeline {
                      for ( rpm in vulns.data.Layer.Features ){
                          vulnList = rpm.Vulnerabilities
                          if(vulnList != null && vulnList.size() != 0){
+                             i = 0;
                              for(vuln in vulnList){
+                                 echo i++
                                  switch(vuln.Severity){
                                      case "Low":
                                          low.add(vuln)
