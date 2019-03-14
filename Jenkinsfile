@@ -101,7 +101,7 @@ pipeline {
                          if(vulnList != null && vulnList.size() != 0){
                              i = 0;
                              for(vuln in vulnList){
-                                 echo i++
+                                 echo "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH: " + i++
                                  switch(vuln.Severity){
                                      case "Low":
                                          low.add(vuln)
