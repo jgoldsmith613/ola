@@ -78,6 +78,7 @@ pipeline {
              for( imageRef in tagInfo.images ) {
                  if( imageRef.sort_index > index_max ) {
                      imageId = imageRef.id
+                     index_max = imageRef.sort_index
                  }
              }
 
@@ -101,7 +102,6 @@ pipeline {
                          if(vulnList != null && vulnList.size() != 0){
                              i = 0;
                              for(vuln in vulnList){
-                                 echo "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH: " + i++
                                  switch(vuln.Severity){
                                      case "Low":
                                          low.add(vuln)
