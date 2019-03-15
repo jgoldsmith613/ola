@@ -1,12 +1,12 @@
-def template = 'https://raw.githubusercontent.com/redhat-cop/image-scanning-signing-service/master/examples/image-signing-request-template.yml'
-def quayURL = 'quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com'
-def repo = 'admin/security-demo'
-
 openshift.withCluster() {
   env.NAMESPACE =  openshift.project()
   env.APP_NAME = "${env.JOB_NAME}".replaceAll(/-?${env.NAMESPACE}-?/, '').replaceAll(/-?pipeline-?/, '').replaceAll('/', '')
   echo "begin build of " + env.APP_NAME
 }
+
+def template = "https://raw.githubusercontent.com/redhat-cop/image-scanning-signing-service/master/examples/image-signing-request-template.yml"
+def quayURL = "quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com"
+def repo = "admin/${APP_NAME}"
 
 pipeline {
   agent { label 'maven' }
@@ -149,7 +149,9 @@ pipeline {
        steps {
            script{
                openshift.withCluster() {
-                   sh " oc import-image security-demo:${tag} --from=${quayURL}/${repo}:${tag}"
+                   sh " oc import-image ${APP_NAME}:${tag} --from=${quayURL}/${repo}:${tag}"
+                   obj = "${APP_NAME}-${env.BUILD_NUMBER}"
+                   created = openshift.create(openshift.process(template, "-p IMAGE_SIGNING_REQUEST_NAME=${obj} -p IMAGE_STREAM_TAG=${APP_NAME}:${tag}"))
                } 
 
            }
