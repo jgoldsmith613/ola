@@ -132,11 +132,12 @@ pipeline {
                  }
 
              }
+
+             if(critical.size() > 0 || high.size() > 0){
+                 input "Image has ${critical.size()} vulnerabilities and ${high.size()} vulnerabilities.  Please check https://quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/repository/admin/security-demo/image/${imageId}?tab=vulnerabilities.  Would you like to proceed anyway?
+             }
              
-             echo low.toString()
-             echo medium.toString()
-             echo high.toString()
-             echo critical.toString()    
+                
          }
       }
    }
