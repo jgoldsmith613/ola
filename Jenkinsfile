@@ -152,6 +152,43 @@ pipeline {
                    sh " oc import-image ${APP_NAME}:${tag} --from=${quayURL}/${repo}:${tag}"
                    obj = "${APP_NAME}-${env.BUILD_NUMBER}"
                    created = openshift.create(openshift.process(template, "-p IMAGE_SIGNING_REQUEST_NAME=${obj} -p IMAGE_STREAM_TAG=${APP_NAME}:${tag}"))
+
+                   imagesigningrequest = created.narrow('imagesigningrequest').name();
+
+                   echo "ImageSigningRequest ${imagesigningrequest.split('/')[1]} Created"
+
+                   timeout(time: 5, unit: 'MINUTES') {
+
+                   waitUntil() {
+
+                      def isr = openshift.selector("${imagesigningrequest}")
+
+                      if(isr.object().status) {
+
+                          def phase = isr.object().status.phase
+
+                          if(phase == "Failed") {
+                              echo "need to fix this due to sigstore, actually working"
+                              env.SIGNED_IMAGE = isr.object().status.unsignedImage
+                              echo "Signing Action Completed. Signed Image: ${SIGNED_IMAGE}"
+                              //echo "Signing Action Failed: ${isr.object().status.message}"
+                              //currentBuild.result = "FAILURE"
+                              return true
+                          }
+                          else if(phase == "Completed") {
+                              env.SIGNED_IMAGE = isr.object().status.signedImage
+                              echo "Signing Action Completed. Signed Image: ${SIGNED_IMAGE}"
+                              return true
+                         }
+                    }
+                    else {
+                        echo "Status is null"
+                    }
+
+                    return false
+
+                 }
+                }  
                } 
 
            }
