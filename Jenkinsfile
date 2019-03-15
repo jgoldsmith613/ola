@@ -7,6 +7,9 @@ openshift.withCluster() {
 def template = "https://raw.githubusercontent.com/redhat-cop/image-scanning-signing-service/master/examples/image-signing-request-template.yml"
 def quayURL = "quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com"
 def repo = "admin/${APP_NAME}"
+def dev_namespace = "ola-dev"
+def prod_namespace = "ola-prod"
+def dev_route = "ola-ola-dev.apps.andy-e2.casl-contrib.osp.rht-labs.com"
 
 pipeline {
   agent { label 'maven' }
@@ -195,5 +198,44 @@ pipeline {
 
        }
   }
+  stage('Dev Deploy'){
+      steps {
+          script {
+              openshift.withCluster() {
+                  openshift.tag("${APP_NAME}:${tag}", "${dev_namespace}/${APP_NAME}:dev")
+              }
+          }
+      }
+  }
+
+  stage('Dev Smoke Test'){
+      steps {
+          script {
+              sleep 5
+              timeout(time: 5, unit: 'MINUTES') {
+                  waitUntil() {
+                      responce = httpRequest ignoreSslErrors:true, url:"http://${dev_route}"
+                      if( responce.status == 200 ){
+                          return true
+                      }
+                      return false
+
+                  }
+              }
+          }
+      }
+  }
+
+  stage('Prod Deploy'){
+      steps {
+          script {
+              input "Deploy to Prod"
+              openshift.withCluster() {
+                  openshift.tag("${APP_NAME}:${tag}", "${dev_namespace}/${APP_NAME}:dev")
+              }
+          }
+      }
+  }
+
   }
 }
