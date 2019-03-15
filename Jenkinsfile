@@ -26,6 +26,21 @@ pipeline {
       }
     }
 
+    stage('Sonar Scan') {
+      steps {
+        echo "stub for sonar scan" 
+        sleep 3
+      }
+    }
+    
+    stage('Application Component Scan') {
+      steps {
+        echo "stub for Application Componenet Scan"
+        sleep 3
+      }
+    }
+
+
     stage('Image Build') {
       steps {
         echo 'Building Image from Jar File'
