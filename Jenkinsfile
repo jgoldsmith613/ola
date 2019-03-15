@@ -141,5 +141,16 @@ pipeline {
          }
       }
    }
+   stage('Sign Image'){
+       steps {
+           script{
+               openshift.withCluster() {
+                   sh " oc import-image security-demo:${tag} --from=quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/admin/security-demo:${tag}"
+               } 
+
+           }
+
+       }
+  }
   }
 }
