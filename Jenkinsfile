@@ -157,6 +157,7 @@ pipeline {
 
              if(critical.size() > 0 || high.size() > 0){
                  input "Image has ${critical.size()} critical vulnerabilities and ${high.size()} high vulnerabilities.  Please check https://${quayURL}/repository/${repo}/image/${imageId}?tab=vulnerabilities.  Would you like to proceed anyway?"
+                 currentBuild.result = "UNSTABLE"
              }
              
                 
