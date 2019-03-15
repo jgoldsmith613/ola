@@ -1,3 +1,7 @@
+def template = 'https://raw.githubusercontent.com/redhat-cop/image-scanning-signing-service/master/examples/image-signing-request-template.yml'
+def quayURL = 'quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com'
+def repo = 'admin/security-demo'
+
 openshift.withCluster() {
   env.NAMESPACE =  openshift.project()
   env.APP_NAME = "${env.JOB_NAME}".replaceAll(/-?${env.NAMESPACE}-?/, '').replaceAll(/-?pipeline-?/, '').replaceAll('/', '')
@@ -72,7 +76,7 @@ pipeline {
       steps{
          script {
              tag = image.replaceAll("^.+?:","")
-             tagInfo = httpRequest ignoreSslErrors:true, url:"http://quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/api/v1/repository/admin/security-demo/tag/${tag}/images"
+             tagInfo = httpRequest ignoreSslErrors:true, url:"http://${quayURL}/api/v1/repository/${repo}/tag/${tag}/images"
              tagInfo = readJSON text: tagInfo.content
              index_max = -1
              for( imageRef in tagInfo.images ) {
@@ -86,7 +90,7 @@ pipeline {
 
                  waitUntil() {
 
-                     vulns = httpRequest ignoreSslErrors:true, url:"https://quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/api/v1/repository/admin/security-demo/image/${imageId}/security?vulnerabilities=true"
+                     vulns = httpRequest ignoreSslErrors:true, url:"https://${quayURL}/api/v1/repository/${repo}/image/${imageId}/security?vulnerabilities=true"
                      vulns = readJSON text: vulns.content  
                      if(vulns.status != "scanned"){
                          return false
@@ -134,7 +138,7 @@ pipeline {
              }
 
              if(critical.size() > 0 || high.size() > 0){
-                 input "Image has ${critical.size()} critical vulnerabilities and ${high.size()} high vulnerabilities.  Please check https://quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/repository/admin/security-demo/image/${imageId}?tab=vulnerabilities.  Would you like to proceed anyway?"
+                 input "Image has ${critical.size()} critical vulnerabilities and ${high.size()} high vulnerabilities.  Please check https://${quayURL}/repository/${repo}/image/${imageId}?tab=vulnerabilities.  Would you like to proceed anyway?"
              }
              
                 
@@ -145,7 +149,7 @@ pipeline {
        steps {
            script{
                openshift.withCluster() {
-                   sh " oc import-image security-demo:${tag} --from=quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com/admin/security-demo:${tag}"
+                   sh " oc import-image security-demo:${tag} --from=${quayURL}/${repo}:${tag}"
                } 
 
            }
