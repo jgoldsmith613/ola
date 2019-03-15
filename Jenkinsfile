@@ -187,11 +187,8 @@ pipeline {
                           def phase = isr.object().status.phase
 
                           if(phase == "Failed") {
-                              echo "need to fix this due to sigstore, actually working"
-                              env.SIGNED_IMAGE = isr.object().status.unsignedImage
-                              echo "Signing Action Completed. Signed Image: ${SIGNED_IMAGE}"
-                              //echo "Signing Action Failed: ${isr.object().status.message}"
-                              //currentBuild.result = "FAILURE"
+                              echo "Signing Action Failed: ${isr.object().status.message}"
+                              currentBuild.result = "FAILURE"
                               return true
                           }
                           else if(phase == "Completed") {
