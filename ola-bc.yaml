@@ -16,9 +16,9 @@ spec:
     binary: {}
     type: Binary
   strategy:
-    dockerStrategy:
+    sourceStrategy:
       from:
         kind: ImageStreamTag
         name: java-base-layer:release
-    type: Docker
+    type: Source
   triggers: []

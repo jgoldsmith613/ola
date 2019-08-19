@@ -244,7 +244,7 @@ pipeline {
           script {
               input "Deploy to Prod"
               openshift.withCluster() {
-                  openshift.tag("${APP_NAME}:${tag}", "${dev_namespace}/${APP_NAME}:dev")
+                  openshift.tag("${APP_NAME}:${tag}", "${prod_namespace}/${APP_NAME}:prod")
               }
           }
       }
