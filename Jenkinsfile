@@ -5,11 +5,11 @@ openshift.withCluster() {
 }
 
 def template = "https://raw.githubusercontent.com/redhat-cop/image-scanning-signing-service/master/examples/image-signing-request-template.yml"
-def quayURL = "quay-enterprise-quay-enterprise.apps.andy-e2.casl-contrib.osp.rht-labs.com"
-def repo = "admin/${APP_NAME}"
+def quayURL = "example-quayecosystem-quay-quay-enterprise.apps.cluster-adaf.sandbox508.opentlc.com"
+def repo = "quay/${APP_NAME}"
 def dev_namespace = "ola-dev"
 def prod_namespace = "ola-prod"
-def dev_route = "ola-ola-dev.apps.andy-e2.casl-contrib.osp.rht-labs.com"
+def dev_route = "ola-ola-dev.apps.cluster-adaf.sandbox508.opentlc.com"
 
 pipeline {
   agent { label 'maven' }
@@ -168,7 +168,7 @@ pipeline {
        steps {
            script{
                openshift.withCluster() {
-                   sh " oc import-image ${APP_NAME}:${tag} --from=${quayURL}/${repo}:${tag}"
+                   sh " oc import-image ${APP_NAME}:${tag} --from=${quayURL}/${repo}:${tag} --insecure=true"
                    obj = "${APP_NAME}-${env.BUILD_NUMBER}"
                    created = openshift.create(openshift.process(template, "-p IMAGE_SIGNING_REQUEST_NAME=${obj} -p IMAGE_STREAM_TAG=${APP_NAME}:${tag}"))
 
