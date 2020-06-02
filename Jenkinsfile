@@ -6,7 +6,7 @@ openshift.withCluster() {
 
 def template = "https://raw.githubusercontent.com/jgoldsmith613/java-base-march-security/master/signing-template.yaml"
 def quayURL = "example-quayecosystem-quay-quay.apps.cluster-nyc-ea98.nyc-ea98.example.opentlc.com"
-def repo = "quay/${APP_NAME}"
+def repo = "security/${APP_NAME}"
 def dev_namespace = "ola-dev"
 def prod_namespace = "ola-prod"
 def dev_route = "ola-ola-dev.apps.cluster-nyc-ea98.nyc-ea98.example.opentlc.com"
