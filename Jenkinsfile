@@ -226,7 +226,7 @@ pipeline {
               sleep 5
               timeout(time: 5, unit: 'MINUTES') {
                   waitUntil() {
-                      responce = httpRequest ignoreSslErrors:true, url:"http://${dev_route}"
+                      responce = httpRequest ignoreSslErrors:true, url:"http://${dev_route}", validResponseCodes: '100:599'
                       if( responce.status == 200 ){
                           return true
                       }
