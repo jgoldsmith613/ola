@@ -138,8 +138,7 @@ pipeline {
                                          critical.add(vuln)
                                          break
                                      default:
-                                         echo "Should never be here"
-                                         currentBuild.result = "FAILURE"
+                                         echo "new vuln type?"
                                          break
                                    }
                               
